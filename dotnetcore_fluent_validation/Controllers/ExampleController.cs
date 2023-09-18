@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using dotnetcore_fluent_validation.Models;
+using dotnetcore_fluent_validation.ValidationExtensions;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 #region Author
 //JonathanNgo
@@ -9,14 +12,15 @@ namespace dotnetcore_fluent_validation.Controllers;
 [Route("api/[controller]")]
 public class ExampleController : Controller
 {
-    public ExampleController()
+    private readonly IValidator<Product> _validator;
+    public ExampleController(IValidator<Product> validator)
     {
-        
+        _validator = validator;
     }
 
-    [HttpGet]
-    public IActionResult Get()
+    [HttpPost]
+    public IActionResult Post([FromBody] Product product)
     {
-        return Ok("Nice!");
+        return Ok(_validator.Validate(product));
     }
 }
